@@ -1,11 +1,13 @@
 package sample.cafekiosk.spring.domain.product;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ProductSellingType {
+public enum ProductSellingStatus {
 
 	SELLING("판매중"),
 	HOLD("판매 보류"),
@@ -13,4 +15,7 @@ public enum ProductSellingType {
 
 	private final String text;
 
+	public static List<ProductSellingStatus> forDisplay() {
+		return List.of(SELLING, HOLD);
+	}
 }
