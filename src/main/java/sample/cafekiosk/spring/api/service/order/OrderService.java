@@ -31,7 +31,8 @@ public class OrderService {
 
 	/**
 	 * 재고 감소 -> 동시성 이슈의 대표적인 사례(동시성 고민)
-	 * 보통은 optimistic lock / pessimistic lock / ... 등을 사용합니다
+	 * MySQL Lock : optimistic lock / persimistic lock / named lock / ... 등을 사용합니다
+	 * Redis Lock : lettuce lock / redisson lock
 	 */
 	public OrderResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDateTime) {
 		List<String> productNumbers = request.getProductNumbers();
