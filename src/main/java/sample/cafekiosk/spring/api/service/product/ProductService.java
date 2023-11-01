@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import sample.cafekiosk.spring.api.controller.product.dto.request.ProductCreateRequest;
+import sample.cafekiosk.spring.api.service.product.request.ProductCreateServiceRequest;
 import sample.cafekiosk.spring.api.service.product.response.ProductResponse;
 import sample.cafekiosk.spring.domain.product.Product;
 import sample.cafekiosk.spring.domain.product.ProductRepository;
@@ -31,13 +31,21 @@ public class ProductService {
 	// DB에서 ProductNumber field에 유니크키를 걸어서 처리하는 방법이 있을 수도 있고,
 	// UUID로 생성해서 동시성 이슈가 없도록 정책적으로 처리하는 등 여러 방법이 있을 수 있다.
 	@Transactional
-	public ProductResponse createProduct(ProductCreateRequest request) {
+	public ProductResponse createProduct(ProductCreateServiceRequest request) {
 		String nextProductNumber = createNextProductNumber();
 
 		Product product = request.toEntity(nextProductNumber);
 		Product savedProduct = productRepository.save(product);
 
 		return ProductResponse.of(savedProduct);
+	}
+
+	public List<ProductResponse> getSellingProducts() {
+		List<Product> products = productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplay());
+
+		return products.stream()
+			.map(ProductResponse::of)
+			.collect(Collectors.toList());
 	}
 
 	private String createNextProductNumber() {
@@ -50,14 +58,6 @@ public class ProductService {
 		int nextProductNumberInt = latestProductNumberInt + 1;
 
 		return String.format("%03d", nextProductNumberInt);
-	}
-
-	public List<ProductResponse> getSellingProducts() {
-		List<Product> products = productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplay());
-
-		return products.stream()
-			.map(ProductResponse::of)
-			.collect(Collectors.toList());
 	}
 
 }
