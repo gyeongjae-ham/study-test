@@ -50,7 +50,7 @@ class ProductServiceTest {
 			.build();
 
 		// when
-		ProductResponse productResponse = productService.createProduct(request);
+		ProductResponse productResponse = productService.createProduct(request.toServiceRequest());
 
 		// then
 		assertThat(productResponse)
@@ -78,7 +78,7 @@ class ProductServiceTest {
 			.build();
 
 		// when
-		ProductResponse productResponse = productService.createProduct(request);
+		ProductResponse productResponse = productService.createProduct(request.toServiceRequest());
 
 		// then
 		assertThat(productResponse)
@@ -93,12 +93,8 @@ class ProductServiceTest {
 			);
 	}
 
-	private Product createProduct(
-		String productNumber,
-		ProductType type,
-		ProductSellingStatus sellingStatus,
-		String name,
-		int price) {
+	private Product createProduct(String productNumber, ProductType type, ProductSellingStatus sellingStatus,
+		String name, int price) {
 		return Product.builder()
 			.productNumber(productNumber)
 			.type(type)
