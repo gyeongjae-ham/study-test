@@ -26,13 +26,14 @@ import sample.cafekiosk.spring.domain.product.ProductSellingStatus;
 public class ProductService {
 
 	private final ProductRepository productRepository;
+	private final ProductNumberFactory productNumberFactory;
 
 	// ProductNumber가 동시에 생성되면 이슈가 발생할 수 있다.
 	// DB에서 ProductNumber field에 유니크키를 걸어서 처리하는 방법이 있을 수도 있고,
 	// UUID로 생성해서 동시성 이슈가 없도록 정책적으로 처리하는 등 여러 방법이 있을 수 있다.
 	@Transactional
 	public ProductResponse createProduct(ProductCreateServiceRequest request) {
-		String nextProductNumber = createNextProductNumber();
+		String nextProductNumber = productNumberFactory.createNextProductNumber();
 
 		Product product = request.toEntity(nextProductNumber);
 		Product savedProduct = productRepository.save(product);
@@ -46,18 +47,6 @@ public class ProductService {
 		return products.stream()
 			.map(ProductResponse::of)
 			.collect(Collectors.toList());
-	}
-
-	private String createNextProductNumber() {
-		String latestProductNumber = productRepository.findLatestProductNumber();
-		if (latestProductNumber == null) {
-			return "001";
-		}
-
-		int latestProductNumberInt = Integer.parseInt(latestProductNumber);
-		int nextProductNumberInt = latestProductNumberInt + 1;
-
-		return String.format("%03d", nextProductNumberInt);
 	}
 
 }
