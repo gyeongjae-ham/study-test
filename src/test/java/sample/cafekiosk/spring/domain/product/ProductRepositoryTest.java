@@ -9,13 +9,13 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-@ActiveProfiles("test")
-// @SpringBootTest
-@DataJpaTest // @SpringBootTest에 비해서 Jpa 관련 bean들만 사용하기 때문에 속도가 빠릅니다
-class ProductRepositoryTest {
+import sample.cafekiosk.spring.IntegrationTestSupport;
+
+// @DataJpaTest // @SpringBootTest에 비해서 Jpa 관련 bean들만 사용하기 때문에 속도가 빠릅니다
+@Transactional
+class ProductRepositoryTest extends IntegrationTestSupport {
 
 	@Autowired
 	private ProductRepository productRepository;
